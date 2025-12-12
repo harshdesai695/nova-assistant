@@ -5,7 +5,7 @@ import logging
 import time
 
 SERVER_URL = "http://localhost:8000/chat"
-WAKE_WORD = "Nova"
+WAKE_WORD = "nova"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("CLIENT")
@@ -85,6 +85,6 @@ def main_loop():
 
 if __name__ == "__main__":
     print("------------------------------------------------")
-    print("   J.A.R.V.I.S VOICE CLIENT (Windows Mode)      ")
+    print("   N.V.O.A VOICE CLIENT (Windows Mode)      ")
     print("------------------------------------------------")
     main_loop()
