@@ -1,0 +1,24 @@
+# Core Framework
+fastapi==0.115.4
+uvicorn[standard]==0.32.0
+
+# AI & Machine Learning
+azure-ai-inference>=1.0.0b1
+azure-core>=1.30.0
+
+# Data Validation & Settings
+pydantic==2.9.2
+python-dotenv==1.0.1
+
+# Utilities
+requests==2.32.3
+
+# Voice Capabilities
+SpeechRecognition>=3.14.1
+pyttsx3==2.90
+pyaudio==0.2.14
+standard-aifc
+audioop-lts
+
+# Application Opener
+AppOpener==1.7

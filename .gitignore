@@ -1,0 +1,204 @@
+# ============================================
+# N.O.V.A Assistant - Git Ignore File
+# ============================================
+
+# ====================
+# CRITICAL: API Keys & Secrets
+# ====================
+.env
+.env.local
+.env.*.local
+*.key
+secrets.json
+credentials.json
+
+# ====================
+# Python Compilation
+# ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ====================
+# Virtual Environments
+# ====================
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+virtualenv/
+pipenv/
+
+# ====================
+# Distribution / Packaging
+# ====================
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ====================
+# IDE / Editors
+# ====================
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# ====================
+# Operating System Files
+# ====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ====================
+# Logs & Databases
+# ====================
+*.log
+*.sqlite
+*.sqlite3
+*.db
+logs/
+log/
+
+# ====================
+# Testing & Coverage
+# ====================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+
+# ====================
+# Audio Files (if storing recordings)
+# ====================
+*.wav
+*.mp3
+*.flac
+*.aac
+recordings/
+audio_cache/
+
+# ====================
+# Temporary Files
+# ====================
+*.tmp
+*.temp
+*.bak
+*.swp
+*.cache
+tmp/
+temp/
+
+# ====================
+# Documentation Build
+# ====================
+docs/_build/
+site/
+.mkdocs_cache/
+
+# ====================
+# Azure & Cloud Configs
+# ====================
+azure.json
+.azure/
+
+# ====================
+# Docker
+# ====================
+docker-compose.override.yml
+.dockerignore
+
+# ====================
+# Package Manager Files
+# ====================
+poetry.lock
+Pipfile.lock
+yarn.lock
+package-lock.json
+
+# ====================
+# Project Specific
+# ====================
+# User data
+user_data/
+conversations/
+chat_history/
+
+# Custom skills (if private)
+# skills/private_*.py
+
+# Model weights/cache (if downloading models)
+models/
+*.pth
+*.pt
+*.ckpt
+*.bin
+
+# Screenshots/media for testing
+screenshots/
+test_media/
