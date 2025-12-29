@@ -1,37 +1,72 @@
 # N.O.V.A - Neural Operative Virtual Assistant 🤖
 
-A voice-activated AI assistant powered by Azure AI, featuring a modular plugin system for extensible skills. Think JARVIS, but for your local machine.
+A sophisticated AI assistant powered by Azure AI, featuring both a modern desktop GUI and voice-activated interface with an extensible plugin system. Think JARVIS, but for your local machine.
 
-## 🌟 Features
+## 🌟 Key Features
 
-- **Voice-Activated**: Wake word detection ("Nova") with hands-free interaction
-- **Azure AI Powered**: Leverages Azure's advanced language models for intelligent responses
-- **Plugin Architecture**: Easily extensible skill system for adding new capabilities
+### 🎯 Dual Interface System
+- **Desktop GUI**: Modern PyQt6 interface with real-time visualization and control
+- **Voice Interface**: Hands-free interaction with wake word detection ("Nova")
+- **Unified Backend**: FastAPI server handles both interfaces seamlessly
+
+### 🧠 Intelligence & Integration
+- **Azure AI Powered**: Leverages Azure's advanced language models (GPT-4o)
+- **Plugin Architecture**: Easily extensible skill system for adding capabilities
+- **Tool Calling**: AI autonomously selects and executes the right tools
 - **Real-Time Speech**: Speech recognition and text-to-speech for natural conversations
-- **RESTful API**: FastAPI backend for scalable, async request handling
 
-## 🏗️ Project Structure
+### 🎨 Advanced GUI Features
+- **3D Animated Visualization**: Neural network-inspired sphere with state indicators
+- **Live Statistics**: Commands, response times, uptime, and system metrics
+- **Modular UI Skills**: Camera feeds, weather displays, and custom windows
+- **Real-Time Console**: Live logs from backend, voice client, and AI operations
+- **Settings Manager**: Configure Azure credentials and system behavior
+
+### 🛠️ Built-in Skills
+- **System Operations**: Calculator, file management, app launching
+- **System Information**: CPU, memory, disk, battery, network stats
+- **Weather Integration**: Live weather data with visual UI
+- **Camera Access**: Computer vision capabilities with HUD overlay
+- **Web Operations**: Browser automation and website launching
+
+## 🏗️ Project Architecture
 
 ```
 nova-assistant/
 │
-├── main.py                 # FastAPI server & plugin loader
-├── client.py              # Voice interface client
-├── check_models.py        # Azure connectivity test utility
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables (create this)
-├── .gitignore            # Git ignore rules
+├── main.py                     # FastAPI backend server
+├── nova_gui.py                 # PyQt6 desktop interface (main entry point)
+├── client.py                   # Voice interface client
+├── check_models.py             # Azure connectivity test utility
+├── requirements.txt            # Python dependencies
+├── .env                        # Environment variables (create this)
+├── .gitignore                  # Git ignore rules
 │
-├── core/
-│   ├── llm.py            # Azure AI integration
-│   └── registry.py       # Skill registration system
+├── core/                       # Core system modules
+│   ├── llm.py                  # Azure AI integration & tool calling
+│   └── registry.py             # Skill registration system
 │
-└── skills/               # Plugin directory
-    ├── __init__.py
-    └── [your_skill].py   # Custom skills go here
+├── skills/                     # Backend skill plugins
+│   ├── __init__.py
+│   ├── app_launcher.py         # Application launching
+│   ├── camera_ops.py           # Camera control
+│   ├── file_ops.py             # File operations
+│   ├── os_ops.py               # OS-level operations
+│   ├── system_info.py          # System monitoring
+│   ├── weather_ops.py          # Weather API integration
+│   └── web_ops.py              # Web automation
+│
+└── ui/                         # GUI modules
+    ├── components.py           # Reusable UI components
+    ├── registry.py             # UI skill registration
+    ├── styles.py               # Dark theme stylesheet
+    ├── settings.py             # Settings page
+    └── skills/                 # UI skill windows
+        ├── camera_ui.py        # Camera interface
+        └── weather_ui.py       # Weather interface
 ```
 
-## 🚀 Getting Started
+## 🚀 Quick Start Guide
 
 ### Prerequisites
 
@@ -39,6 +74,7 @@ nova-assistant/
 - **Azure Account** with AI Inference access
 - **Microphone** for voice input
 - **Speakers** for audio output
+- **Webcam** (optional, for camera features)
 
 ### Installation
 
@@ -76,41 +112,47 @@ nova-assistant/
    AZURE_INFERENCE_ENDPOINT=your_endpoint_here
    AZURE_INFERENCE_CREDENTIAL=your_api_key_here
    LLM_MODEL=gpt-4o
+   OPENWEATHER_API_KEY=your_weather_api_key  # Optional, for weather features
    ```
-   
-   *(See section below on how to obtain these credentials)*
 
 ### Running the Application
 
-1. **Test your Azure connection**
-   ```bash
-   python check_models.py
-   ```
-   
-   You should see:
-   ```
-   ✅ Credentials Found.
-   🧠 Sending test message ('Hello')...
-   ✅ SUCCESS! Brain is active.
-   ```
+#### Option 1: Unified Desktop App (Recommended)
+```bash
+python nova_gui.py
+```
 
-2. **Start the backend server**
-   ```bash
-   python main.py
-   ```
-   
-   The server will start on `http://localhost:8000`
+This launches the complete system:
+- ✅ Modern desktop GUI with visualization
+- ✅ Backend server (FastAPI)
+- ✅ Voice client (automatic)
+- ✅ All features in one window
 
-3. **Start the voice client** (in a new terminal)
-   ```bash
-   # Activate venv first
-   python client.py
-   ```
+**What you get:**
+- Real-time activity console
+- Voice interaction with visual feedback
+- Quick action buttons
+- System statistics dashboard
+- Settings manager
 
-4. **Talk to N.O.V.A!**
-   - Say: **"Nova, what's the weather today?"**
-   - Say: **"Nova, tell me a joke"**
-   - Say: **"Nova, what can you do?"**
+#### Option 2: Traditional Separate Mode
+
+**Terminal 1 - Backend Server:**
+```bash
+python main.py
+```
+
+**Terminal 2 - Voice Client:**
+```bash
+python client.py
+```
+
+**Using the System:**
+- Say: **"Nova, what's the weather today?"**
+- Say: **"Nova, tell me a joke"**
+- Say: **"Nova, what can you do?"**
+- Say: **"Nova, open the camera"**
+- Say: **"Nova, what's my CPU usage?"**
 
 ## 🔑 Getting Azure Credentials
 
@@ -153,8 +195,6 @@ nova-assistant/
 
 ### Step 4: Get Your Credentials
 
-Copy the following values:
-
 **AZURE_INFERENCE_ENDPOINT:**
 ```
 For Azure AI Foundry:
@@ -175,11 +215,12 @@ Found under "Keys and Endpoint" → KEY 1
 AZURE_INFERENCE_ENDPOINT=https://my-nova-project.openai.azure.com/
 AZURE_INFERENCE_CREDENTIAL=1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p
 LLM_MODEL=gpt-4o
+OPENWEATHER_API_KEY=your_openweather_key_here
 ```
 
-## 🛠️ Adding New Skills
+## 🛠️ Creating Backend Skills (Tools)
 
-Skills are plugins that extend N.O.V.A's capabilities. Here's how to create one:
+Skills extend N.O.V.A's capabilities with new actions. The AI automatically decides when to use them.
 
 ### Step 1: Create a New Skill File
 
@@ -189,17 +230,14 @@ Create a new Python file in the `skills/` directory:
 skills/my_custom_skill.py
 ```
 
-### Step 2: Define Your Skill
+### Step 2: Simple Skill Example
 
 ```python
-from core.registry import register_skill
+from core.registry import skill
 
-@skill(
-    name="get_current_time",
-    description="Returns the current time in 12-hour format"
-)
+@skill
 def get_current_time():
-    """Get the current time."""
+    """Returns the current time in 12-hour format."""
     from datetime import datetime
     now = datetime.now()
     return now.strftime("%I:%M %p")
@@ -208,109 +246,246 @@ def get_current_time():
 ### Step 3: Skill with Parameters
 
 ```python
-from core.registry import register_skill
+from core.registry import skill
 
-@skill(
-    name="calculate_tip",
-    description="Calculate tip amount for a bill",
-    parameters={
-        "bill_amount": {
-            "type": "number",
-            "description": "The total bill amount in dollars"
-        },
-        "tip_percentage": {
-            "type": "number",
-            "description": "Tip percentage (e.g., 15, 18, 20)"
-        }
-    }
-)
+@skill
 def calculate_tip(bill_amount: float, tip_percentage: float):
-    """Calculate the tip amount."""
+    """
+    Calculate tip amount for a bill.
+    
+    Args:
+        bill_amount: The total bill amount in dollars
+        tip_percentage: Tip percentage (e.g., 15, 18, 20)
+    """
     tip = (bill_amount * tip_percentage) / 100
     total = bill_amount + tip
     return f"Tip: ${tip:.2f}, Total: ${total:.2f}"
 ```
 
-### Step 4: Restart the Server
+### Step 4: Advanced Skill with External API
 
-The skill will be automatically loaded when you restart `main.py`:
+```python
+from core.registry import skill
+import requests
 
-```bash
-python main.py
-```
-
-You'll see:
-```
-✅ Active: skills.my_custom_skill
-🛠️ 3 Skills Registered.
-```
-
-### Step 5: Test Your Skill
-
-```bash
-# In the voice client
-"Nova, what time is it?"
-"Nova, calculate a tip for a $50 bill with 20% tip"
+@skill
+def get_stock_price(symbol: str):
+    """
+    Get current stock price for a given symbol.
+    
+    Args:
+        symbol: Stock ticker symbol (e.g., 'AAPL', 'GOOGL')
+    """
+    try:
+        # Replace with your actual API
+        url = f"https://api.example.com/stock/{symbol}"
+        response = requests.get(url)
+        data = response.json()
+        
+        price = data['price']
+        change = data['change']
+        
+        return f"{symbol} is trading at ${price}, {change}% today"
+    except Exception as e:
+        return f"Sorry, I couldn't fetch data for {symbol}"
 ```
 
 ### Skill Best Practices
 
-1. **Keep skills focused**: One skill should do one thing well
-2. **Add clear descriptions**: Help the AI understand when to use your skill
-3. **Handle errors gracefully**: Use try-except blocks
-4. **Return strings**: Always return human-readable responses
-5. **Use type hints**: Makes your code more maintainable
+1. **Use clear docstrings**: The AI reads these to understand when to use the skill
+2. **Type hints**: Always provide type hints for parameters
+3. **Error handling**: Use try-except blocks
+4. **Return strings**: Always return human-readable text
+5. **Keep focused**: One skill should do one thing well
 
-### Example: Weather Skill
+## 🎨 Creating UI Skills (Windows)
+
+UI Skills are custom windows that can be launched by voice or GUI button.
+
+### Step 1: Create UI Skill File
+
+Create a file in `ui/skills/` directory:
+
+```bash
+ui/skills/my_ui_skill.py
+```
+
+### Step 2: Basic UI Skill Template
 
 ```python
-from core.registry import register_skill
-import requests
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
+from PyQt6.QtCore import Qt
+from ui.registry import register_ui_skill
 
-@skill(
-    name="get_weather",
-    description="Get current weather for a city",
-    parameters={
-        "city": {
-            "type": "string",
-            "description": "City name (e.g., 'London', 'New York')"
-        }
-    }
+@register_ui_skill(
+    title="My Custom Tool",
+    icon="🔧",
+    description="Does something amazing",
+    trigger_signal="ACTIVATE_MY_TOOL"  # Optional: auto-launch on this log message
 )
-def get_weather(city: str):
-    """Fetch weather data for a given city."""
-    try:
-        # Replace with your weather API
-        api_key = "your_api_key"
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+class MyCustomWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("My Custom Tool")
+        self.resize(600, 400)
         
-        response = requests.get(url)
-        data = response.json()
+        # Your UI code here
+        layout = QVBoxLayout(self)
         
-        temp = data['main']['temp']
-        description = data['weather'][0]['description']
+        label = QLabel("Hello from my custom tool!")
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(label)
         
-        return f"The weather in {city} is {description} with a temperature of {temp}°C"
-    except Exception as e:
-        return f"Sorry, I couldn't fetch the weather for {city}"
+        btn = QPushButton("Do Something")
+        btn.clicked.connect(self.do_something)
+        layout.addWidget(btn)
+    
+    def do_something(self):
+        print("Button clicked!")
 ```
+
+### Step 3: UI Skill with Auto-Launch
+
+To make the UI automatically open when a backend skill is called:
+
+```python
+# In skills/my_backend_skill.py
+@skill
+def activate_my_tool():
+    """Activates my custom tool interface."""
+    return "ACTIVATE_MY_TOOL"  # This triggers the UI to open
+```
+
+The UI will automatically open when the trigger signal appears in logs!
+
+## 📋 Available Backend Skills
+
+| Skill | Description | Example Usage |
+|-------|-------------|---------------|
+| `launch_application` | Open any installed app | "Open WhatsApp" |
+| `enable_visual_system` | Activate camera | "Turn on camera" |
+| `read_file` | Read file contents | "Read my notes" |
+| `write_file` | Create/overwrite files | "Write a file" |
+| `create_folder` | Create directories | "Make a new folder" |
+| `list_files` | List directory contents | "List files in Documents" |
+| `get_system_info` | Full system report | "System status" |
+| `get_cpu_usage` | CPU statistics | "CPU usage" |
+| `get_memory_usage` | RAM statistics | "Memory usage" |
+| `get_disk_usage` | Disk statistics | "Disk space" |
+| `get_battery_status` | Battery info | "Battery level" |
+| `get_weather` | Weather for any city | "Weather in London" |
+| `open_website` | Open URLs | "Open google.com" |
+
+## 🎯 GUI Features Explained
+
+### Main Dashboard
+- **3D Neural Sphere**: Visual representation of AI state
+  - Blue (Idle): Waiting for commands
+  - Green (Listening): Recording audio
+  - Purple (Processing): AI thinking
+- **Statistics Cards**: Live system metrics
+- **Quick Actions**: One-click commands
+- **Activity Console**: Real-time logs
+
+### Settings Page
+- Configure Azure credentials without editing files
+- Toggle "Always on Top" window mode
+- All settings persist to `.env` file
+
+### UI Skills System
+- Camera Window: Live feed with HUD overlay
+- Weather Window: Beautiful weather display
+- Extensible: Add your own custom windows
+
+## 🐛 Troubleshooting
+
+### "Brain not initialized" error
+- Check your `.env` file has correct Azure credentials
+- Run `python check_models.py` to test connection
+- Verify your Azure model deployment is active
+
+### Voice recognition not working
+- Ensure microphone permissions are granted
+- Check microphone is set as default device
+- Speak clearly after saying "Nova"
+- Adjust `energy_threshold` in `client.py` if too sensitive
+
+### Camera won't open
+- Verify camera permissions
+- Check another app isn't using the camera
+- Try restarting the application
+
+### GUI not starting
+- Ensure PyQt6 is installed: `pip install PyQt6`
+- Check for errors in console output
+- Try running `python main.py` separately first
+
+## 🔧 Advanced Configuration
+
+### Custom Wake Word
+Edit `client.py`:
+```python
+WAKE_WORD = "NOVA"  # Change to your preference
+```
+
+### TTS Voice & Speed
+Edit `client.py`:
+```python
+engine.setProperty('rate', 190)  # Speed (words per minute)
+engine.setProperty('voice', voices[1].id)  # Different voice
+```
+
+### Server Port
+Edit `main.py`:
+```python
+uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
+```
+
+## 📦 Building Executable
+
+To create a standalone `.exe` file:
+
+```bash
+pyinstaller --onefile --windowed --icon=icon.ico nova_gui.py
+```
+
+The executable will be in the `dist/` folder.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingSkill`)
-3. Commit your changes (`git commit -m 'Add some AmazingSkill'`)
-4. Push to the branch (`git push origin feature/AmazingSkill`)
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📚 Resources
+### Contribution Ideas
+- New skills (Spotify control, email, calendar)
+- UI improvements
+- Additional language support
+- Mobile companion app
+- Multi-language speech recognition
+
+## 📚 Resources & Documentation
 
 - [Azure AI Documentation](https://learn.microsoft.com/en-us/azure/ai-services/)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [PyQt6 Documentation](https://www.riverbankcomputing.com/static/Docs/PyQt6/)
 - [SpeechRecognition Library](https://pypi.org/project/SpeechRecognition/)
+- [OpenCV Documentation](https://docs.opencv.org/)
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
 
 ---
 
-**Built with ❤️ using Azure AI and Python**
+<div align="center">
+  Made with ❤️ by Harsh Desai
+  <br/>
+  <br/>
+  If you found this project helpful, please consider giving it a ⭐️
+</div>

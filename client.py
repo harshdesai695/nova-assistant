@@ -30,13 +30,14 @@ def speak(text):
 def listen_for_command():
     recognizer = sr.Recognizer()
     recognizer.dynamic_energy_threshold = True
-    recognizer.pause_threshold = 0.8 # Wait a bit longer before cutting off
-    
+    recognizer.pause_threshold = 1.5 # Wait a bit longer before cutting off
+    recognizer.energy_threshold = 800
     with sr.Microphone() as source:
         logger.info("Listening...")
         try:
-            audio = recognizer.listen(source, timeout=5.0, phrase_time_limit=10.0)
+            audio = recognizer.listen(source, timeout=10.0, phrase_time_limit=15.0)
             text = recognizer.recognize_google(audio).lower()
+            recognizer.adjust_for_ambient_noise(source, duration=1)
             logger.info(f"Heard: {text}")
             return text
         except sr.WaitTimeoutError:
