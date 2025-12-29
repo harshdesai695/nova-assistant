@@ -194,7 +194,7 @@ skills/my_custom_skill.py
 ```python
 from core.registry import register_skill
 
-@register_skill(
+@skill(
     name="get_current_time",
     description="Returns the current time in 12-hour format"
 )
@@ -210,7 +210,7 @@ def get_current_time():
 ```python
 from core.registry import register_skill
 
-@register_skill(
+@skill(
     name="calculate_tip",
     description="Calculate tip amount for a bill",
     parameters={
@@ -267,7 +267,7 @@ You'll see:
 from core.registry import register_skill
 import requests
 
-@register_skill(
+@skill(
     name="get_weather",
     description="Get current weather for a city",
     parameters={
