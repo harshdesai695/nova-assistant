@@ -6,11 +6,12 @@ from azure.core.credentials import AzureKeyCredential
 from azure.core.exceptions import HttpResponseError
 
 # Load env
-load_dotenv() 
+load_dotenv(override=True) 
 
 endpoint = os.getenv("AZURE_INFERENCE_ENDPOINT")
 key = os.getenv("AZURE_INFERENCE_CREDENTIAL")
 model = os.getenv("LLM_MODEL", "gpt-4o")
+version = os.getenv("Azure_version")
 
 print("---------------------------------------")
 print("   AZURE AI FOUNDRY CONNECTION TEST    ")
@@ -24,12 +25,15 @@ else:
     print(f"   Key: {masked_key}")
     print(f"   Endpoint: {endpoint}")
     
+    full_endpoint = f"{endpoint.rstrip('/')}/deployments/{model}"
+    
     try:
         client = ChatCompletionsClient(
-            endpoint=endpoint,
+            endpoint=full_endpoint,
             credential=AzureKeyCredential(key)
         )
         
+       
         print("\n🧠 Sending test message ('Hello')...")
         response = client.complete(
             messages=[
@@ -37,7 +41,6 @@ else:
                 UserMessage(content="Hello! Are you online?")
             ],
             model=model,
-            max_tokens=50
         )
         
         print("\n✅ SUCCESS! Brain is active.")

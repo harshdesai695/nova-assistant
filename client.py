@@ -3,6 +3,10 @@ import speech_recognition as sr
 import pyttsx3
 import logging
 import time
+import os
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 SERVER_URL = "http://localhost:8000/chat"
 WAKE_WORD = "nova"
@@ -10,10 +14,15 @@ WAKE_WORD = "nova"
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("CLIENT")
 
+VOICE_SETTINGS = {
+    "rate": int(os.getenv("TTS_RATE", 190)),
+    "voice_index": int(os.getenv("TTS_VOICE_INDEX", 0)),
+    "energy_threshold": int(os.getenv("MIC_ENERGY_THRESHOLD", 800))
+}
+
 try:
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
-    engine.setProperty('rate', 190) 
 except Exception as e:
     logger.error(f"Failed to initialize TTS engine: {e}")
 
@@ -22,22 +31,34 @@ def speak(text):
         return
     logger.info(f"Nova: {text}")
     try:
+        load_dotenv(override=True)
+        rate = int(os.getenv("TTS_RATE", 190))
+        v_idx = int(os.getenv("TTS_VOICE_INDEX", 0))
+        
+        engine.setProperty('rate', rate)
+        voices = engine.getProperty('voices')
+        if 0 <= v_idx < len(voices):
+            engine.setProperty('voice', voices[v_idx].id)
+            
         engine.say(text)
         engine.runAndWait()
     except Exception as e:
         logger.error(f"TTS Error: {e}")
 
 def listen_for_command():
+    load_dotenv(override=True)
+    threshold = int(os.getenv("MIC_ENERGY_THRESHOLD", 800))
+    
     recognizer = sr.Recognizer()
-    recognizer.dynamic_energy_threshold = True
-    recognizer.pause_threshold = 1.5 # Wait a bit longer before cutting off
-    recognizer.energy_threshold = 800
+    recognizer.dynamic_energy_threshold = False
+    recognizer.energy_threshold = threshold
+    recognizer.pause_threshold = 1.5 
+    
     with sr.Microphone() as source:
-        logger.info("Listening...")
+        logger.info(f"Listening (Threshold: {threshold})...")
         try:
             audio = recognizer.listen(source, timeout=10.0, phrase_time_limit=15.0)
             text = recognizer.recognize_google(audio).lower()
-            recognizer.adjust_for_ambient_noise(source, duration=1)
             logger.info(f"Heard: {text}")
             return text
         except sr.WaitTimeoutError:
@@ -59,7 +80,7 @@ def main_loop():
                 continue
             clean_command = command.replace(WAKE_WORD, "").strip()
             if not clean_command:
-                speak("Yes?") # User just said "Nova"
+                speak("Yes?") 
                 continue
 
             try:
@@ -86,6 +107,6 @@ def main_loop():
 
 if __name__ == "__main__":
     print("------------------------------------------------")
-    print("   N.V.O.A VOICE CLIENT (Windows Mode)      ")
+    print("   N.V.O.A VOICE CLIENT (Advanced Mode)      ")
     print("------------------------------------------------")
     main_loop()

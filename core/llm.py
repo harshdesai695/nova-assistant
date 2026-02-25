@@ -126,15 +126,13 @@ def initialize_brain(tools_list: List[Callable]):
     if not endpoint or not key:
         raise ValueError("CRITICAL: Missing AZURE_INFERENCE_ENDPOINT or AZURE_INFERENCE_CREDENTIAL in .env")
 
-    # Build the full endpoint with deployment name
     full_endpoint = f"{endpoint.rstrip('/')}/deployments/{model_name}"
 
     print(f"Initializing Azure AI Foundry with model: {model_name}")
-    print(f"Endpoint: {full_endpoint}")
 
     client = ChatCompletionsClient(
         endpoint=full_endpoint,
-        credential=AzureKeyCredential(key),
+        credential=AzureKeyCredential(key)
     )
 
     tools_map = {func.__name__: func for func in tools_list}
