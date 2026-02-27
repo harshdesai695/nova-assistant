@@ -28,3 +28,4 @@ AppOpener==1.7
 pyinstaller>=6.0.0
 requests
 pyautogui
+screen_brightness_control

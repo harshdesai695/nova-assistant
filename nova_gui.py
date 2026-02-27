@@ -45,7 +45,6 @@ class NovaMainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("N.O.V.A Desktop Assistant")
-        self.resize(1280, 850)
         self.setStyleSheet(DARK_THEME)
 
         self.stats = {
@@ -78,6 +77,7 @@ class NovaMainWindow(QMainWindow):
         
         self.stack = QStackedWidget()
         self.init_home_page()
+        self.init_logs_page()
         self.init_settings_page()
         
         self.main_layout.addWidget(self.stack)
@@ -111,6 +111,7 @@ class NovaMainWindow(QMainWindow):
         self.btn_logs = QPushButton("📝")
         self.btn_logs.setObjectName("sidebar_btn")
         self.btn_logs.setCheckable(True)
+        self.btn_logs.clicked.connect(self.show_logs)
 
         layout.addWidget(self.btn_home)
         layout.addWidget(self.btn_logs)
@@ -155,15 +156,11 @@ class NovaMainWindow(QMainWindow):
         grid_layout = QGridLayout()
         grid_layout.setSpacing(15)
 
-        # self.add_skill_btn(grid_layout, "☁️ Check Weather", 0, 0, "check weather")
-        self.add_skill_btn(grid_layout, "🧮 Open Calculator", 0, 0, "open calculator")
-        self.add_skill_btn(grid_layout, "📂 List Files", 0, 1, "list files")
-        self.add_skill_btn(grid_layout, "🌐 Launch Browser", 1, 0, "open google")
-
-        row, col = 1, 1
+        row, col = 0, 0
         ui_skills = get_all_ui_skills()
+        latest_skills = list(ui_skills.items())[-6:]
         
-        for name, metadata in ui_skills.items():
+        for name, metadata in latest_skills:
             btn_text = f"{metadata.icon} {metadata.title}"
             btn = QPushButton(btn_text)
             btn.setObjectName("action_btn")
@@ -184,6 +181,23 @@ class NovaMainWindow(QMainWindow):
         layout.addWidget(status_panel)
         
         self.stack.addWidget(home_widget)
+
+    def init_logs_page(self):
+        logs_widget = QWidget()
+        layout = QVBoxLayout(logs_widget)
+        layout.setContentsMargins(40, 40, 40, 40)
+        layout.setSpacing(20)
+
+        header = QLabel("System Logs")
+        header.setObjectName("header")
+        layout.addWidget(header)
+
+        self.full_console = QTextEdit()
+        self.full_console.setObjectName("console")
+        self.full_console.setReadOnly(True)
+        layout.addWidget(self.full_console)
+
+        self.stack.addWidget(logs_widget)
 
     def init_settings_page(self):
         settings_widget = SettingsPage(self)
@@ -245,9 +259,9 @@ class NovaMainWindow(QMainWindow):
 
     def execute_quick_action(self, text):
         self.console.append(f'<span style="color:#ffffff;">User (GUI): {text}</span>')
+        self.full_console.append(f'<span style="color:#ffffff;">User (GUI): {text}</span>')
         worker = WorkerThread(self.send_backend_request, text)
         worker.start()
-        # Keep reference to avoid GC
         self.last_worker = worker
 
     def send_backend_request(self, text):
@@ -259,15 +273,24 @@ class NovaMainWindow(QMainWindow):
     def show_home(self):
         self.stack.setCurrentIndex(0)
         self.btn_home.setChecked(True)
+        self.btn_logs.setChecked(False)
+        self.btn_settings.setChecked(False)
+
+    def show_logs(self):
+        self.stack.setCurrentIndex(1)
+        self.btn_logs.setChecked(True)
+        self.btn_home.setChecked(False)
         self.btn_settings.setChecked(False)
 
     def show_settings(self):
-        self.stack.setCurrentIndex(1)
+        self.stack.setCurrentIndex(2)
         self.btn_settings.setChecked(True)
         self.btn_home.setChecked(False)
+        self.btn_logs.setChecked(False)
 
     def start_system(self):
         self.console.append(">>> Initializing N.O.V.A System...")
+        self.full_console.append(">>> Initializing N.O.V.A System...")
         self.backend_thread = BackendThread()
         self.backend_thread.start()
         self.client_thread = ClientThread()
@@ -295,6 +318,7 @@ class NovaMainWindow(QMainWindow):
                 window_instance.start_camera()
             self.active_windows[skill_name] = window_instance
             self.console.append(f'<span style="color:#00f0ff;">[GUI] Launched: {metadata.title}</span>')
+            self.full_console.append(f'<span style="color:#00f0ff;">[GUI] Launched: {metadata.title}</span>')
 
     def process_log(self, text):
         if "NOVA" in text:
@@ -308,6 +332,7 @@ class NovaMainWindow(QMainWindow):
 
         formatted_text = f'<span style="color:{color};">{text}</span>'
         self.console.append(formatted_text)
+        self.full_console.append(formatted_text)
         
         for name, metadata in get_all_ui_skills().items():
             if metadata.trigger_signal and metadata.trigger_signal in text:
@@ -356,6 +381,6 @@ if __name__ == "__main__":
     app.setFont(font)
     
     window = NovaMainWindow()
-    window.show()
+    window.showMaximized()
     
     sys.exit(app.exec())
