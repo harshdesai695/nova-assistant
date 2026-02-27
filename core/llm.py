@@ -22,6 +22,9 @@ GUIDELINES:
 
 logger = logging.getLogger("NOVA_BRAIN")
 
+NOVA_CLIENT = None
+NOVA_MODEL = None
+
 @dataclass
 class ResponseWrapper:
     text: str
@@ -119,6 +122,7 @@ class AzureNovaSession:
 
 
 def initialize_brain(tools_list: List[Callable]):
+    global NOVA_CLIENT, NOVA_MODEL
     endpoint = os.getenv("AZURE_INFERENCE_ENDPOINT")
     key = os.getenv("AZURE_INFERENCE_CREDENTIAL")
     model_name = os.getenv("LLM_MODEL", "gpt-4o") 
@@ -134,6 +138,9 @@ def initialize_brain(tools_list: List[Callable]):
         endpoint=full_endpoint,
         credential=AzureKeyCredential(key)
     )
+    
+    NOVA_CLIENT = client
+    NOVA_MODEL = model_name
 
     tools_map = {func.__name__: func for func in tools_list}
     tool_definitions = [function_to_schema(func) for func in tools_list]

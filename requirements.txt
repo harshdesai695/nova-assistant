@@ -26,3 +26,5 @@ AppOpener==1.7
 
 # Build Tools (Optional, for creating .exe)
 pyinstaller>=6.0.0
+requests
+pyautogui

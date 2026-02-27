@@ -1,0 +1,17 @@
+BACKEND SKILL RULES:
+1. Import: from core.registry import skill
+2. Decorate function with @skill
+3. Include clear docstrings for LLM tool usage.
+4. Provide type hints for arguments.
+5. Handle exceptions internally and return error strings.
+6. Always return a human-readable string.
+
+UI SKILL RULES:
+1. Import: from PyQt6.QtWidgets import QWidget, ...
+2. Import: from ui.registry import register_ui_skill
+3. Decorate class with @register_ui_skill(title="...", icon="...", description="...", trigger_signal="...")
+4. Inherit from QWidget.
+5. The trigger_signal must match the exact string returned by the corresponding backend skill to auto-launch.
+
+DEPENDENCIES:
+List any required external PyPI packages not already in requirements.txt.
